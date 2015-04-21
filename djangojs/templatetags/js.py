@@ -108,37 +108,76 @@ def js_lib(filename):
 
 
 @register.simple_tag
-def javascript(filename, type='text/javascript'):
-    '''A simple shortcut to render a ``script`` tag to a static javascript file'''
+def javascript(filename, type=None, charset=None, async=False):
+    '''A simple shortcut to render a ``script`` tag to a static JavaScript file'''
     if '?' in filename and len(filename.split('?')) is 2:
         filename, params = filename.split('?')
-        return '<script type="%s" src="%s?%s"></script>' % (type, staticfiles_storage.url(filename), params)
+        js_file = '%s?%s' % (filename, params)
     else:
-        return '<script type="%s" src="%s"></script>' % (type, staticfiles_storage.url(filename))
+        js_file = '%s' % filename
+    js_attrs = 'src="%s"' % staticfiles_storage.url(js_file)
+    if async: js_attrs += ' async' % async
+    if type: js_attrs += ' type="text/%s"' % type
+    if charset: js_attrs += ' charset="%s"' % charset
+    return '<script %s></script>' % js_attrs
 
 
 @register.simple_tag
-def js(filename, type='text/javascript'):
-    '''A simple shortcut to render a ``script`` tag to a static javascript file'''
+def js(filename, type='javascript'):
+    '''A simple shortcut to render a ``script`` tag to a static JavaScript file'''
     return javascript(filename, type=type)
 
 
 @register.simple_tag
 def coffeescript(filename):
-    '''A simple shortcut to render a ``script`` tag to a static coffeescript file'''
-    return javascript(filename, type='text/coffeescript')
+    '''A simple shortcut to render a ``script`` tag to a static CoffeeScript file'''
+    return javascript(filename, type='coffeescript')
 
 
 @register.simple_tag
 def coffee(filename):
-    '''A simple shortcut to render a ``script`` tag to a static coffeescript file'''
-    return javascript(filename, type='text/coffeescript')
+    '''A simple shortcut to render a ``script`` tag to a static CoffeeScript file'''
+    return javascript(filename, type='coffeescript')
 
 
 @register.simple_tag
-def css(filename):
+def css(filename, type=None, media=None, charset=None):
     '''A simple shortcut to render a ``link`` tag to a static CSS file'''
-    return '<link rel="stylesheet" type="text/css" href="%s" />' % staticfiles_storage.url(filename)
+    link_attrs = 'rel="stylesheet" href="%s"' % staticfiles_storage.url(filename)
+    if media: link_attrs += ' media="%s"' % media
+    if type: link_attrs += ' type="text/%s"' % type
+    if charset: link_attrs += ' charset="%s"' % charset
+    return '<link %s>' % link_attrs
+
+
+@register.simple_tag
+def less(filename):
+    '''A simple shortcut to render a ``link`` tag to a static LESS file'''
+    return css(filename, type='less')
+
+
+@register.simple_tag
+def stylus(filename):
+    '''A simple shortcut to render a ``link`` tag to a static Stylus file'''
+    return css(filename, type='stylus')
+
+
+@register.simple_tag
+def styl(filename):
+    '''A simple shortcut to render a ``link`` tag to a static Stylus file'''
+    return css(filename, type='stylus')
+
+
+@register.simple_tag
+def sass(filename):
+    '''A simple shortcut to render a ``link`` tag to a static Sass file'''
+    return css(filename, type='x-sass')
+
+
+@register.simple_tag
+def scss(filename):
+    '''A simple shortcut to render a ``link`` tag to a static Scss file'''
+    return css(filename, type='x-scss')
 
 
 def _boolean(value):
