@@ -30,8 +30,8 @@ def js_info_dict():
 
 
 urlpatterns = patterns('',
-    url(r'^init\.js$', JsInitView.as_view(), name='django_js_init'),
-    url(r'^urls$', UrlsJsonView.as_view(), name='django_js_urls'),
-    url(r'^context$', ContextJsonView.as_view(), name='django_js_context'),
-    url(r'^translation$', 'django.views.i18n.javascript_catalog', js_info_dict(), name='js_catalog'),
+    url(r'^django\.js$', JsInitView.as_view(), name='django_js_init'),
+    url(r'^urls\.js$', UrlsJsonView.as_view(), name='django_js_urls'),
+    url(r'^context\.js$', ContextJsonView.as_view(), name='django_js_context'),
+    url(r'^translation\.js$', 'django.views.i18n.javascript_catalog', js_info_dict(), name='js_catalog'),
 )
